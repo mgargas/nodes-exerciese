@@ -1,3 +1,4 @@
+import akka.http.scaladsl.model.headers.`Access-Control-Allow-Origin`
 import akka.http.scaladsl.server.{HttpApp, Route}
 import de.heikoseeberger.akkahttpjackson.JacksonSupport
 import model.Node
@@ -15,8 +16,12 @@ object Main extends HttpApp with App with JacksonSupport {
   println(nodesJson)
 
   override protected def routes: Route = path("nodes") {
-    get {
-      complete(nodes)
+    respondWithHeaders(
+      `Access-Control-Allow-Origin`("http://localhost:3000")
+    ) {
+      get {
+        complete(nodes)
+      }
     }
   }
   startServer("localhost", 8080)
